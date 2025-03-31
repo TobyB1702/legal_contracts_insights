@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+
+  mongodb:
+    image: mongo:7.0 # or any preferred version
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  backend:
+    build: ./backend/
+    ports:
+      - "8000:8000"
+    container_name: backend
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+
+volumes:
+  mongodb_data:
