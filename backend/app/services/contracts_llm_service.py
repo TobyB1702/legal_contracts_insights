@@ -93,11 +93,6 @@ class OpenAIContractsInsightsService:
         relevant_chunks = relevant_chunks_collector.retrieve_relevant_chunks(query, top_k=5)
         relevant_chunks_collector.close_connection()
 
-        print("Hello")
-        print(f"Relevant Chunks: {relevant_chunks}")
-
-        print(create_context_prompt(relevant_chunks))
-
         messages = []
         messages.append({"role": "system", "content": create_context_prompt(relevant_chunks)})
         messages.append({"role": "user", "content": query})

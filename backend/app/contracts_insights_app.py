@@ -3,13 +3,23 @@ from config.config import Config
 
 # API
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+
 
 # Services
 from services.contracts_llm_service import OpenAIContractsInsightsService
 from services.relevant_chunks_collector import RelevantChunksCollector
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 @app.get("/query_contract_data/{query}")
 def query_contract_data(query: str):
@@ -23,8 +33,12 @@ def query_contract_data(query: str):
     Data_Response: The response object containing the answer.
     """
 
+    print(f"Query: {query}")
+
     contract_insights_service = OpenAIContractsInsightsService()
     response = contract_insights_service.query_contract_data(query)
+
+    print(f"LLM Response: {response.content}")
 
     return {"answer": response.content }
 
